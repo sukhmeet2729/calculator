@@ -11,32 +11,31 @@
 <body>
 <div class="d-flex flex-row justify-content-center align-items-center" style="height:100vh;">
     <div class="calculator">
-		<div class="viewbox">
-			11+22
+		<div class="viewbox" id="display">
 		</div>
 		<div class="row mt-3 justify-content-center">
-			<div class="col-3"><button class="btn">7</button></div>
-			<div class="col-3"><button class="btn">8</button></div>
-			<div class="col-3"><button class="btn">9</button></div>
-			<div class="col-3"><button class="btn">X</button></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="7" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="8" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="9" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="*" type="button"></div>
 		</div>
 		<div class="row mt-2 justify-content-center">
-			<div class="col-3"><button class="btn">4</button></div>
-			<div class="col-3"><button class="btn">5</button></div>
-			<div class="col-3"><button class="btn">6</button></div>
-			<div class="col-3"><button class="btn">-</button></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="4" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="5" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="6" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="-" type="button"></div>
 		</div>
 		<div class="row mt-2 justify-content-center">
-			<div class="col-3"><button class="btn">1</button></div>
-			<div class="col-3"><button class="btn">2</button></div>
-			<div class="col-3"><button class="btn">3</button></div>
-			<div class="col-3"><button class="btn">+</button></div>
+			<div class="col-3"><input class="btn" value="1" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="2" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="3" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="+" type="button"></div>
 		</div>
 		<div class="row mt-2 justify-content-center">
-			<div class="col-3"><button class="btn clear">C</button></div>
-			<div class="col-3"><button class="btn">0</button></div>
-			<div class="col-3"><button class="btn">/</button></div>
-			<div class="col-3"><button class="btn equals">=</button></div>
+			<div class="col-3"><input class="btn clear" id="v-btn" value="C" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="0" type="button"></div>
+			<div class="col-3"><input class="btn" id="v-btn" value="/" type="button"></div>
+			<div class="col-3"><input class="btn equals" id="v-btn" value="=" type="button"></div>
 		</div>
 	</div>
     </div>
@@ -45,5 +44,37 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#display').html('0');
+		var BASEURL = "<?php echo base_url(); ?>";
+		$('input[type=button]').click(function(){
+			var num = $(this).val();
+			var old = $('#display').html();
+			$('#display').append(num);
+			if(old == '0'){
+				$('#display').html(num);
+			}
+			if( num == 'C' ){
+				$('#display').html('0');
+			}
+			if( num == '=' ){
+				$.ajax({
+				url: BASEURL + 'home/calc/',
+				type: 'POST',
+				data: {old: old},
+				error: function() {
+					$('#display').html('Something is wrong');
+				},
+				success: function(data) {
+					// console.log(data);
+					$('#display').html(data);
+				}
+				});	
+			}
+				});
+    });
+</script>
 </body>
 </html>
